@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import personsService from './services/persons';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' },
-  ]);
+  const [persons, setPersons] = useState([]);
 
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
@@ -21,36 +17,34 @@ const App = () => {
     if (persons.find((person) => person.name === newName)) {
       return alert(`${newName} is already added to phonebook`);
     }
-    const newObj = { name: newName, number: newNumber };
-    setPersons([...persons, newObj]);
-    setNewName('');
-    setNewNumber('');
+
+    const newPerson = { name: newName, number: newNumber };
+
+    personsService.create(newPerson).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName('');
+      setNewNumber('');
+    });
   };
 
-  const handleFilter = (e) => {
-    return setFilter(e.target.value);
-  };
-
-  const handleNumberChange = (e) => {
-    return setNewNumber(e.target.value);
-  };
-
-  const handleNameChange = (e) => {
-    return setNewName(e.target.value);
-  };
+  useEffect(() => {
+    personsService.getAll().then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filter={filter} handleFilter={handleFilter} />
+      <Filter filter={filter} handleFilter={(e) => setFilter(e.target.value)} />
 
       <h2>Add A New</h2>
       <PersonForm
         handleSubmit={handleSubmit}
         newName={newName}
         newNumber={newNumber}
-        handleName={handleNameChange}
-        handleNumber={handleNumberChange}
+        handleName={(e) => setNewName(e.target.value)}
+        handleNumber={(e) => setNewNumber(e.target.value)}
       />
 
       <h2>Numbers</h2>
