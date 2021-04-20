@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import Message from './Message';
 import personsService from './services/persons';
+import './App.css';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [message, setMessage] = useState(null);
+  const [status, setStatus] = useState('');
 
   const handleUpdatePerson = (person) => {
     if (
@@ -33,6 +37,11 @@ const App = () => {
       setPersons(persons.concat(response.data));
       setNewName('');
       setNewNumber('');
+      setMessage(`Added ${newPerson.name}`);
+      setStatus('succeed');
+      setTimeout(() => {
+        setMessage(null);
+      }, 1000);
     });
   };
 
@@ -52,7 +61,7 @@ const App = () => {
       personsService.deletePerson(id).then((response) => {
         if (response) {
           const newPersons = persons.filter((person) => person.id !== id);
-          return setPersons(newPersons);
+          setPersons(newPersons);
         }
       });
     }
@@ -65,8 +74,9 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <div className="App">
       <h2>Phonebook</h2>
+      <Message message={message} status={status} />
       <Filter filter={filter} handleFilter={(e) => setFilter(e.target.value)} />
 
       <h2>Add A New</h2>

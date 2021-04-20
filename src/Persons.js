@@ -11,7 +11,7 @@ const Persons = ({ filter, persons, deletePerson }) => {
 
     return personsList.map((p) => {
       return (
-        <p key={p.name}>
+        <li key={p.name}>
           {p.name} {p.number}{' '}
           <button
             onClick={() => {
@@ -20,11 +20,11 @@ const Persons = ({ filter, persons, deletePerson }) => {
           >
             Delete
           </button>
-        </p>
+        </li>
       );
     });
   };
-  return <div>{renderPersons()}</div>;
+  return <ul>{renderPersons()}</ul>;
 };
 
 export default Persons;
