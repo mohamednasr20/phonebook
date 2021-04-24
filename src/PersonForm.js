@@ -11,10 +11,19 @@ const PersonForm = ({
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          name: <input type="text" value={newName} onChange={handleName} />
+          <input
+            type="text"
+            value={newName}
+            onChange={handleName}
+            placeholder="Name"
+          />
           <div>
-            number:{' '}
-            <input type="tel" value={newNumber} onChange={handleNumber} />
+            <input
+              type="tel"
+              value={newNumber}
+              onChange={handleNumber}
+              placeholder="Number"
+            />
           </div>
         </div>
         <div>
