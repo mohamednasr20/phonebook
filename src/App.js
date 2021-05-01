@@ -33,16 +33,27 @@ const App = () => {
   const handleCreatePerson = () => {
     const newPerson = { name: newName, number: newNumber };
 
-    personsService.create(newPerson).then((response) => {
-      setPersons(persons.concat(response.data));
-      setNewName('');
-      setNewNumber('');
-      setMessage(`Added ${newPerson.name}`);
-      setStatus('succeed');
-      setTimeout(() => {
-        setMessage(null);
-      }, 1000);
-    });
+    personsService
+      .create(newPerson)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName('');
+        setNewNumber('');
+        setMessage(`Added ${newPerson.name}`);
+        setStatus('succeed');
+        setTimeout(() => {
+          setMessage(null);
+          setStatus('');
+        }, 1000);
+      })
+      .catch((error) => {
+        setMessage(error.response.data.error);
+        setStatus('danger');
+        setTimeout(() => {
+          setMessage(null);
+          setStatus('');
+        }, 2000);
+      });
   };
 
   const handleSubmit = (e) => {
@@ -71,6 +82,7 @@ const App = () => {
   useEffect(() => {
     personsService.getAll().then((response) => {
       setPersons(response.data);
+      console.log(response.data);
     });
   }, []);
 
